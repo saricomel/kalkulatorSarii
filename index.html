@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Modern</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+        }
+        .calculator {
+            background: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 320px;
+        }
+        input {
+            width: 100%;
+            height: 60px;
+            text-align: right;
+            font-size: 2em;
+            margin-bottom: 15px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 20px;
+            font-size: 1.5em;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            box-shadow: 0 0 30px rgba(177, 156, 217, 1);
+        }
+        .operator, .clear, .backspace, .equal {
+            background: #b19cd9;
+            color: white;
+            box-shadow: 0 0 20px rgba(177, 156, 217, 0.8);
+        }
+        .operator:hover, .clear:hover, .backspace:hover, .equal:hover {
+            background: #d1b3ff;
+            box-shadow: 0 0 40px rgba(177, 156, 217, 1);
+        }
+        .equal {
+            grid-column: span 2;
+        }
+        .number {
+            background: #ddd;
+            color: black;
+        }
+        .number:hover {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="backspace()" class="backspace">⌫</button>
+            <button onclick="appendValue('/')" class="operator">/</button>
+            <button onclick="appendValue('*')" class="operator">×</button>
+            <button onclick="appendValue('7')" class="number">7</button>
+            <button onclick="appendValue('8')" class="number">8</button>
+            <button onclick="appendValue('9')" class="number">9</button>
+            <button onclick="appendValue('-')" class="operator">-</button>
+            <button onclick="appendValue('4')" class="number">4</button>
+            <button onclick="appendValue('5')" class="number">5</button>
+            <button onclick="appendValue('6')" class="number">6</button>
+            <button onclick="appendValue('+')" class="operator">+</button>
+            <button onclick="appendValue('1')" class="number">1</button>
+            <button onclick="appendValue('2')" class="number">2</button>
+            <button onclick="appendValue('3')" class="number">3</button>
+            <button onclick="appendPercent()" class="operator">%</button>
+            <button onclick="appendValue('0')" class="number">0</button>
+            <button onclick="appendValue('.')" class="number">.</button>
+            <button onclick="calculate()" class="equal">=</button>
+        </div>
+    </div>
+
+    <script>
+        function appendValue(value) {
+            document.getElementById('display').value += value;
+        }
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+        function calculate() {
+            try {
+                document.getElementById('display').value = eval(document.getElementById('display').value);
+            } catch {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+        function backspace() {
+            let display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+        function appendPercent() {
+            let display = document.getElementById('display');
+            let expression = display.value;
+            
+            let numbers = expression.split(/([+\-*/])/);
+            let lastNumber = numbers[numbers.length - 1];
+            let prevNumber = numbers.length > 2 ? numbers[numbers.length - 3] : null;
+            let operator = numbers.length > 1 ? numbers[numbers.length - 2] : null;
+            
+            if (!isNaN(lastNumber) && prevNumber && !isNaN(prevNumber)) {
+                let percentValue = (parseFloat(lastNumber) / 100) * parseFloat(prevNumber);
+                numbers[numbers.length - 1] = percentValue;
+                display.value = numbers.join('');
+            } else {
+                display.value = parseFloat(lastNumber) / 100;
+            }
+        }
+    </script>
+</body>
+</html>
